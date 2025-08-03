@@ -1,0 +1,24 @@
+---
+// src/pages/attendance/index.astro
+import Layout from "../../layouts/Layout.astro";
+import { DashboardLayout } from "../../components/layout/DashboardLayout";
+import { AttendanceCalendar } from "../../components/attendance/AttendanceCalendar";
+import { mockAttendance } from "../../data/mockData";
+
+const currentDate = new Date();
+const currentMonth = currentDate.getMonth();
+const currentYear = currentDate.getFullYear();
+---
+
+<Layout title="Attendance Management - HRIS">
+	<DashboardLayout client:load>
+		<div class="space-y-6">
+			<div>
+				<h1 class="text-3xl font-bold text-gray-900">Attendance Management</h1>
+				<p class="text-gray-600 mt-2">Track and manage employee attendance records.</p>
+			</div>
+
+			<AttendanceCalendar attendance={mockAttendance} month={currentMonth} year={currentYear} client:load />
+		</div>
+	</DashboardLayout>
+</Layout>

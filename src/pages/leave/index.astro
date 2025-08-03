@@ -1,0 +1,20 @@
+---
+// src/pages/leave/index.astro
+import Layout from "../../layouts/Layout.astro";
+import { DashboardLayout } from "../../components/layout/DashboardLayout";
+import { LeaveRequests } from "../../components/leave/LeaveRequests";
+import { mockLeaveRequests, mockEmployees } from "../../data/mockData";
+---
+
+<Layout title="Leave Management - HRIS">
+	<DashboardLayout client:load>
+		<div class="space-y-6">
+			<div>
+				<h1 class="text-3xl font-bold text-gray-900">Leave Management</h1>
+				<p class="text-gray-600 mt-2">Review and manage employee leave requests.</p>
+			</div>
+
+			<LeaveRequests leaveRequests={mockLeaveRequests} employees={mockEmployees} client:load />
+		</div>
+	</DashboardLayout>
+</Layout>

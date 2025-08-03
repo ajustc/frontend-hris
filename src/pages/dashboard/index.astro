@@ -1,0 +1,83 @@
+---
+// src/pages/dashboard/index.astro
+import Layout from "../../layouts/Layout.astro";
+import { DashboardLayout } from "../../components/layout/DashboardLayout";
+import { OverviewCards } from "../../components/dashboard/OverviewCards";
+import { RecentActivities } from "../../components/dashboard/RecentActivities";
+import { DashboardCharts } from "../../components/charts/DashboardCharts";
+import { mockEmployees, mockAttendance, mockLeaveRequests } from "../../data/mockData";
+
+// Calculate dashboard metrics
+const totalEmployees = mockEmployees.length;
+const presentToday = mockEmployees.filter((emp) => emp.status === "active").length;
+const pendingLeaves = mockLeaveRequests.filter((req) => req.status === "pending").length;
+const monthlyPayroll = mockEmployees.reduce((sum, emp) => sum + emp.salary, 0);
+
+// Mock data for charts
+const attendanceData = [
+	{ date: "2024-01", present: 85, absent: 15 },
+	{ date: "2024-02", present: 88, absent: 12 },
+	{ date: "2024-03", present: 90, absent: 10 },
+	{ date: "2024-04", present: 87, absent: 13 },
+];
+
+const departmentData = [
+	{ name: "Engineering", value: 45 },
+	{ name: "Sales", value: 25 },
+	{ name: "Marketing", value: 15 },
+	{ name: "HR", value: 10 },
+	{ name: "Finance", value: 5 },
+];
+
+const leaveData = [
+	{ month: "Jan", approved: 12, pending: 3, rejected: 1 },
+	{ month: "Feb", approved: 15, pending: 2, rejected: 2 },
+	{ month: "Mar", approved: 18, pending: 4, rejected: 1 },
+	{ month: "Apr", approved: 14, pending: 5, rejected: 3 },
+];
+
+const recentActivities = [
+	{
+		id: "1",
+		type: "leave" as const,
+		description: "John Doe submitted vacation leave request",
+		timestamp: "2 hours ago",
+		status: "pending",
+	},
+	{
+		id: "2",
+		type: "employee" as const,
+		description: "New employee Sarah Wilson joined Engineering",
+		timestamp: "1 day ago",
+	},
+	{
+		id: "3",
+		type: "payroll" as const,
+		description: "March payroll processed successfully",
+		timestamp: "2 days ago",
+		status: "approved",
+	},
+];
+---
+
+<Layout title="HRIS Dashboard">
+	<DashboardLayout client:load>
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+				<p class="text-gray-600 mt-2">Welcome back! Here's what's happening in your organization.</p>
+			</div>
+
+			<OverviewCards totalEmployees={totalEmployees} presentToday={presentToday} pendingLeaves={pendingLeaves} monthlyPayroll={monthlyPayroll} client:load />
+
+			<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+				<div class="lg:col-span-2">
+					<DashboardCharts attendanceData={attendanceData} departmentData={departmentData} leaveData={leaveData} client:load />
+				</div>
+				<div>
+					<RecentActivities activities={recentActivities} client:load />
+				</div>
+			</div>
+		</div>
+	</DashboardLayout>
+</Layout>
